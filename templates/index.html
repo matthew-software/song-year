@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+    <!--<iframe width="420" height="345" referrerpolicy="no-referrer-when-downgrade" src="{{ video }}"></iframe>-->
+    <iframe width="560" height="315" referrerpolicy="no-referrer-when-downgrade" src="{{ video }}"" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <form action="/" method="POST">
+        {% if score|int != -1 %}
+            Score: {{ score }}<br />
+        {% endif %}
+        {% if correct is true %}
+            Nice!
+        {% endif %}
+        {% if reveal is true %}
+            Answer: {{ song.year }}
+        {% else %}
+            {% if correct is false %}
+                Wrong!<br />
+                Click here for the answer:
+                <input type="submit" name="reveal" value="Show Answer"><br />
+                Or try again:
+            {% else %}
+                Guess the year:
+            {% endif %}
+            <input name="guess" type="number" step="1">
+            <input type="submit" value="Guess!"><br />
+        {% endif %}
+    </form><br />
+
+    The closer your Average Score is to 0, the better!<br />
+    <h2>Average Score: {{ average|round(2) }}<h2>
+
+    <h3>Leaderboard of Best (Lowest) Scores</h3><br />
+    (for users with 10 or more guesses)
+    <table>
+        <th>User</th>
+        <th>Average Score</th>
+
+        {% for leader in leaderboard %}
+            <tr>
+                <td>{{ leader.username }}</td>
+                <td>{{ leader.average_score|round(2) }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
