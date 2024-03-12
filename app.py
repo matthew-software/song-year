@@ -23,7 +23,7 @@ Session(app)
 # Configure CS50 Library to use SQLite databases
 #db = SQL("sqlite:///final-project.db")
 
-DATABASE = 'final-project.db'
+DATABASE = 'C:/Users/mglai/Desktop/song-year/final-project.db'
 
 def get_db():
     db = getattr(g, '_database', None)
