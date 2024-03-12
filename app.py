@@ -12,6 +12,8 @@ import urllib.request
 
 import re
 
+from os import path
+
 # Configure application
 app = Flask(__name__)
 
@@ -20,10 +22,13 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure CS50 Library to use SQLite databases
-#db = SQL("sqlite:///final-project.db")
+ROOT = path.dirname(path.realpath(__file__))
+DATABASE = 'final-project.db'
 
-DATABASE = 'C:/Users/mglai/Desktop/song-year/final-project.db'
+#THIS_FOLDER = Path(__file__).parent.resolve()
+#print(THIS_FOLDER)
+#DATABASE = THIS_FOLDER / "final-project.db"
+#print(DATABASE)
 
 def get_db():
     db = getattr(g, '_database', None)
