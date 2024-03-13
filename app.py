@@ -1,17 +1,11 @@
 import os
-
-#from cs50 import SQL
 import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session, g
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from helpers import apology, login_required
-
 import urllib.request
-
 import re
-
 from os import path
 
 # Configure application
@@ -24,11 +18,6 @@ Session(app)
 
 ROOT = path.dirname(path.realpath(__file__))
 DATABASE = 'final-project.db'
-
-#THIS_FOLDER = Path(__file__).parent.resolve()
-#print(THIS_FOLDER)
-#DATABASE = THIS_FOLDER / "final-project.db"
-#print(DATABASE)
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -122,7 +111,7 @@ def index():
         average = user["average_score"]
 
         # Query database for top ten scores for the leaderboard
-        leaderboard = query_db("SELECT * FROM users ORDER BY average_score LIMIT 10")
+        leaderboard = query_db("SELECT * FROM users WHERE total_guesses >= 10 ORDER BY average_score LIMIT 10")
 
         return render_template("index.html", leaderboard=leaderboard, average=average, song=song, video=video, score=score, correct=correct, reveal=reveal)
 
@@ -136,20 +125,16 @@ def index():
             "year": queried_song[0]["year"]
         }
 
-        print(song)
-
         video = search(song["artist"], song["name"])
 
         score = -1
 
         # Calculate current average score:
-        print("session[user_id]: ", session["user_id"])
         user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
-        print("user: ", user)
         average = user["average_score"]
 
         # Query database for top ten scores for the leaderboard
-        leaderboard = query_db("SELECT * FROM users ORDER BY average_score LIMIT 10")
+        leaderboard = query_db("SELECT * FROM users WHERE total_guesses >= 10 ORDER BY average_score LIMIT 10")
 
         return render_template("index.html", leaderboard=leaderboard, average=average, song=song, video=video, score=score, reveal=False)
 
@@ -245,15 +230,11 @@ def register():
 
         # Register user
         query_db("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
-        print()
-        print("REGISTERED USER, username, password: ", username, password)
 
         # Remember which user has logged in
         user = query_db("SELECT * FROM users WHERE username = ?", [username], one=True)
         session["user_id"] = user["id"]
         session["username"] = user["username"]
-        print("...and user_id is: ", user["id"])
-        print()
 
         # Redirect user to home page
         return redirect("/")

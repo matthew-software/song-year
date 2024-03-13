@@ -7,17 +7,17 @@ nav .navbar-brand
 /* Colors for brand */
 nav .navbar-brand .blue
 {
-    color: #537fbe;
+    color: #5d9bb6;
 }
-nav .navbar-brand .red
+
+/* Size for default text */
+nav .default
 {
-    color: #ea433b;
+    font-size: medium;
 }
-nav .navbar-brand .yellow
+
+/* Colors for default text*/
+nav .default .blue
 {
-    color: #f5b82e;
-}
-nav .navbar-brand .green
-{
-    color: #2e944b;
+    color: #5d9bb6;
 }
