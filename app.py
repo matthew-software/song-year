@@ -64,6 +64,19 @@ def search(artist, name):
         return "https://www.youtube.com/embed/" + search_results[0]
 
 
+def update_current_info():
+    # Query database for current information
+    user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
+
+    song["artist"] = user["current_song_artist"]
+    song["title"] = user["current_song_title"]
+    song["year"] = user["current_song_year"]
+    video = user["current_video"]
+    score = user["current_score"]
+    correct = user["current_correct"]
+    reveal = user["current_reveal"]
+
+
 def update_stats():
     # Query database for total guesses and score, update them, then update stats in database
     user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
@@ -78,6 +91,7 @@ def update_stats():
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
+
     global song
     global video
     global score
@@ -105,9 +119,13 @@ def index():
                     update_stats()
                 correct = False
                 reveal = False
+        
+        # Update current database info
+        user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
+        query_db("UPDATE users SET current_correct = ?, current_reveal = ?, current_score = ?" " WHERE id = ?", [correct, reveal, score, user["id"]])
+        update_current_info()
 
         # Calculate current average score:
-        user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
         average = user["average_score"]
 
         # Query database for top ten scores for the leaderboard
@@ -116,21 +134,26 @@ def index():
         return render_template("index.html", leaderboard=leaderboard, average=average, song=song, video=video, score=score, correct=correct, reveal=reveal)
 
     else:
+        update_current_info()
+
         # Query database for random song
         queried_song = query_db("SELECT * FROM songs ORDER BY RANDOM() LIMIT 1")
 
         song = {
             "artist": queried_song[0]["artist"],
-            "name": queried_song[0]["title"],
+            "title": queried_song[0]["title"],
             "year": queried_song[0]["year"]
         }
 
-        video = search(song["artist"], song["name"])
+        video = search(song["artist"], song["title"])
 
         score = -1
 
-        # Calculate current average score:
+        # Update user current info
         user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
+        query_db("UPDATE users SET current_song_artist = ?, current_song_title = ?, current_song_year = ?, current_video = ?, current_score = ?" " WHERE id = ?",  [song["artist"], song["title"], song["year"], video, score, user["id"]])
+
+        # Calculate current average score:
         average = user["average_score"]
 
         # Query database for top ten scores for the leaderboard
