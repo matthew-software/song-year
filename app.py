@@ -73,8 +73,8 @@ def update_current_info():
     song["year"] = user["current_song_year"]
     video = user["current_video"]
     score = user["current_score"]
-    correct = user["current_correct"]
-    reveal = user["current_reveal"]
+    #correct = user["current_correct"]
+    #reveal = user["current_reveal"]
 
 
 def update_stats():
@@ -106,7 +106,12 @@ def index():
         # else, user is guessing:
         else:
             # if answer is correct:
+            print("guess: ", request.form.get("guess"))
+            print("answer: ", song["year"])
+            print("guess type: ", type(request.form.get("guess")))
+            print("answer type: ", type(song["year"]))
             if request.form.get("guess") == song["year"]:
+                print("they're equal, so...")
                 if score == -1:
                     score = 0
                     update_stats()
