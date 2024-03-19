@@ -106,12 +106,7 @@ def index():
         # else, user is guessing:
         else:
             # if answer is correct:
-            print("guess: ", request.form.get("guess"))
-            print("answer: ", song["year"])
-            print("guess type: ", type(request.form.get("guess")))
-            print("answer type: ", type(song["year"]))
             if request.form.get("guess") == song["year"]:
-                print("they're equal, so...")
                 if score == -1:
                     score = 0
                     update_stats()
