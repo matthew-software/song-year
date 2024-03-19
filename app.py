@@ -66,6 +66,10 @@ def search(artist, name):
 
 def update_current_info():
     # Query database for current information
+    global song
+    global video
+    global score
+    
     user = query_db("SELECT * FROM users WHERE id = ?", [session["user_id"]], one=True)
 
     song["artist"] = user["current_song_artist"]
