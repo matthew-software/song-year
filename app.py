@@ -41,7 +41,7 @@ def close_connection(exception):
 
 average = 0
 song = {}
-video = []
+video = ""
 score = -1
 
 
@@ -73,8 +73,6 @@ def update_current_info():
     song["year"] = user["current_song_year"]
     video = user["current_video"]
     score = user["current_score"]
-    #correct = user["current_correct"]
-    #reveal = user["current_reveal"]
 
 
 def update_stats():
@@ -95,6 +93,8 @@ def index():
     global song
     global video
     global score
+
+    update_current_info()
 
     cur = get_db().cursor()
 
@@ -134,8 +134,6 @@ def index():
         return render_template("index.html", leaderboard=leaderboard, average=average, song=song, video=video, score=score, correct=correct, reveal=reveal)
 
     else:
-        update_current_info()
-
         # Query database for random song
         queried_song = query_db("SELECT * FROM songs ORDER BY RANDOM() LIMIT 1")
 
