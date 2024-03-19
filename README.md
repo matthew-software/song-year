@@ -1,6 +1,5 @@
-# Song Year: Guess The Year!
+# [Song Year: Guess The Year!](https://matthewsoftware.pythonanywhere.com)
 ## A game where you're shown a YouTube video fo a popular song and you must guess the year it was released.
-Check it out here: matthewsoftware.pythonanywhere.com
 
 ## How it works:
 * Create an account with a unique username and a password
